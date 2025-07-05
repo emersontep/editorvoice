@@ -1,118 +1,409 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Responsive Text Container</title>
+    <title>Text to Speech 2025 04</title>
     <style>
-        body {
+        * {
             margin: 0;
-            font-family: Arial, sans-serif;
-            background-color: #f0f0f0;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-        }
-
-        .container {
-            max-width: 90%;
-            width: 600px;
-            background-color: #ffffff;
-            border: 1px solid #ddd;
-            border-radius: 8px;
-            padding: 20px;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            padding: 0;
             box-sizing: border-box;
         }
 
+        body {
+            font-family: 'Inter', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #0c0c0c 0%, #1a1a1a 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: #ffffff;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 800px;
+            width: 100%;
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 
+                0 25px 50px rgba(0, 0, 0, 0.5),
+                0 10px 20px rgba(0, 0, 0, 0.3),
+                inset 0 1px 0 rgba(255, 255, 255, 0.1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .container::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+        }
+
         .container h1 {
-            font-size: 1.5em;
-            color: #333;
-            margin-bottom: 10px;
+            font-size: 2.5em;
+            font-weight: 700;
+            background: linear-gradient(135deg, #ffffff 0%, #a0a0a0 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 30px;
+            text-align: center;
+            letter-spacing: -0.5px;
+        }
+
+        .content-wrapper {
+            position: relative;
+            margin-top: 20px;
+        }
+
+        .copy-button {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%);
+            color: white;
+            border: none;
+            border-radius: 12px;
+            padding: 12px 20px;
+            font-size: 0.9em;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(79, 70, 229, 0.3);
+            margin-bottom: 20px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .copy-button::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: left 0.6s ease;
+        }
+
+        .copy-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(79, 70, 229, 0.5);
+        }
+
+        .copy-button:hover::before {
+            left: 100%;
+        }
+
+        .copy-button:active {
+            transform: translateY(0);
+        }
+
+        .copy-button.copied {
+            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+            box-shadow: 0 4px 15px rgba(16, 185, 129, 0.3);
+        }
+
+        .copy-icon {
+            width: 18px;
+            height: 18px;
+            transition: transform 0.3s ease;
         }
 
         .container p {
-            font-size: 1em;
-            line-height: 1.6;
-            color: #666;
+            font-size: 1.1em;
+            line-height: 1.8;
+            color: #e5e5e5;
+            text-align: justify;
+            text-indent: 2em;
+            letter-spacing: 0.3px;
+            padding: 25px;
+            background: rgba(255, 255, 255, 0.02);
+            border-radius: 15px;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            position: relative;
+            overflow: hidden;
         }
 
-        @media (max-width: 480px) {
+        .container p::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 4px;
+            height: 100%;
+            background: linear-gradient(to bottom, #4f46e5, #7c3aed);
+            border-radius: 0 2px 2px 0;
+        }
+
+        .success-message {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+            color: white;
+            padding: 15px 25px;
+            border-radius: 10px;
+            box-shadow: 0 10px 30px rgba(16, 185, 129, 0.3);
+            transform: translateX(400px);
+            opacity: 0;
+            transition: all 0.3s ease;
+            z-index: 1000;
+            font-weight: 600;
+        }
+
+        .success-message.show {
+            transform: translateX(0);
+            opacity: 1;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
             .container {
-                padding: 15px;
+                padding: 30px 25px;
+                margin: 10px;
             }
 
             .container h1 {
-                font-size: 1.2em;
+                font-size: 2em;
             }
 
             .container p {
-                font-size: 0.9em;
+                font-size: 1em;
+                padding: 20px;
+                text-indent: 1.5em;
             }
+
+            .copy-button {
+                padding: 10px 16px;
+                font-size: 0.85em;
+            }
+        }
+
+        @media (max-width: 480px) {
+            body {
+                padding: 15px;
+            }
+
+            .container {
+                padding: 25px 20px;
+            }
+
+            .container h1 {
+                font-size: 1.8em;
+                margin-bottom: 25px;
+            }
+
+            .container p {
+                font-size: 0.95em;
+                line-height: 1.7;
+                padding: 18px;
+                text-indent: 1em;
+            }
+
+            .copy-button {
+                padding: 10px 14px;
+                font-size: 0.8em;
+                gap: 6px;
+            }
+
+            .copy-icon {
+                width: 16px;
+                height: 16px;
+            }
+        }
+
+        /* Animaciones adicionales */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .container {
+            animation: fadeInUp 0.8s ease-out;
+        }
+
+        .container h1 {
+            animation: fadeInUp 0.8s ease-out 0.2s both;
+        }
+
+        .content-wrapper {
+            animation: fadeInUp 0.8s ease-out 0.4s both;
         }
     </style>
 </head>
 <body>
     <div class="container">
         <h1>Text to Speech 2025 04</h1>
-        <p>“Mientras todos los hombres de su tiempo morían… uno desapareció sin dejar rastro. No fue asesinado, no enfermó, no envejeció… simplemente, ya no estaba. Dios lo tomó.”
-Así resume la Biblia la historia de uno de los personajes más enigmáticos del Antiguo Testamento: Enoc.
-Un hombre que no conoció la muerte.
-Un hombre que “caminó con Dios”… y desapareció.
-Pero… ¿qué significa eso?
-¿De verdad alguien puede ser llevado por Dios… con vida?
-¿Y por qué él? ¿Qué hizo Enoc para recibir un destino tan diferente al resto de la humanidad?
-Hoy, desentrañamos uno de los mayores misterios bíblicos.
-Y tú decidirás si fue fe, justicia divina… o algo más profundo de lo que jamás imaginamos.
-Enoc aparece por primera vez en el libro del Génesis, capítulo 5.
-Es parte de la línea de descendientes de Adán.
-Hijo de Jared, padre de Matusalén. Vivió 365 años, exactamente los mismos días que tiene un año solar. ¿Coincidencia?
-La Biblia lo describe con una frase casi silenciosa, pero poderosa:
-“Y caminó Enoc con Dios, y desapareció, porque le llevó Dios.” (Génesis 5:24)
-No dice que murió. No dice que se escondió. Solo… desapareció.
-Y en un mundo donde la muerte era el destino universal de todo ser humano, esa frase lo cambia todo.
-¿Qué clase de hombre era Enoc?
-Según el libro de Hebreos, en el Nuevo Testamento, Enoc fue un hombre de fe.
-"Por la fe Enoc fue trasladado para no ver muerte, y no fue hallado, porque lo trasladó Dios." (Hebreos 11:5)
-Y aquí empieza el misterio.
-La palabra que se usa en hebreo original es “lakaj”, que significa “tomar, llevar, arrebatar”.
-Se usa otras veces en la Biblia para referirse a algo que Dios toma como suyo.
-No es una palabra cualquiera. Es posesiva. Íntima.
-Como si Dios mismo hubiera dicho: “Este hombre me pertenece.”
-Pero… ¿por qué?
-Algunos textos antiguos, como el Libro de Enoc, un escrito apócrifo que no está en la Biblia tradicional pero sí en tradiciones etíopes y muy consultado por los primeros cristianos, ofrecen más pistas.
-Según ese libro, Enoc no solo caminó con Dios…
-Fue llevado al cielo.
-Vio los secretos del universo.
-Presenció el trono de Dios.
-Recibió revelaciones sobre el juicio final.
-Y se convirtió en un intermediario entre lo divino y lo humano.
-Enoc, según estas fuentes, fue un vidente, un profeta, un hombre justo en un mundo corrupto.
-Pensemos en el contexto: la humanidad iba en descenso. La maldad crecía.
-Y justo antes del diluvio… Enoc es apartado.
-Como si su presencia ya no pudiera coexistir con el mundo que venía.
-Teólogos como John Walton sugieren que Enoc representa una ruptura en la narrativa de muerte y juicio.
-Donde Adán y Eva trajeron la caída… Enoc es una chispa de redención.
-Un recordatorio de que aún en un mundo roto, alguien puede caminar tan cerca de Dios… que escape incluso a la muerte.
-Y hay algo más.
-Enoc es el primer ser humano, según la Biblia, que trasciende la muerte sin ser divino.
-No es un ángel, no es un dios, no es Jesús.
-Es… un hombre.
-Como tú. Como yo.
-Pero uno que eligió caminar con Dios.
-La historia de Enoc es corta. Apenas unas líneas en toda la Biblia.
-Pero esas líneas han desconcertado a sabios, religiosos y escépticos por siglos.
-¿Fue llevado al cielo como recompensa?
-¿Como señal de esperanza para los fieles?
-¿O como advertencia silenciosa para un mundo que había olvidado a Dios?
-Hoy, muchos se preguntan si Enoc sigue vivo.
-Si regresará algún día, como algunos escritos judíos sugieren.
-Si su existencia fue literal… o simbólica.
-Lo cierto es que su historia nos deja una pregunta poderosa:
-¿Qué significa realmente caminar con Dios… cuando todo el mundo va en otra dirección?
-¿Y si la muerte no es el fin… sino una elección?
-Tú decides.
-</p>
+        <div class="content-wrapper">
+            <button class="copy-button" onclick="copyToClipboard()">
+                <svg class="copy-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+                    <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+                </svg>
+                <span id="buttonText">Copiar Texto</span>
+            </button>
+            <p class="guion">Una criatura habló. No rugió. No gritó. Solo habló.
+Y en una sola conversación... el mundo cambió para siempre.
+¿Pero quién era realmente la serpiente del Edén?
+¿Satanás… un simple animal… o algo más inquietante?
+La historia que crees conocer… quizá no es la historia completa.
+En el principio, todo era perfecto.
+El hombre y la mujer vivían sin vergüenza.
+Caminaban con Dios, sin miedo, sin muerte, sin culpa.
+El Edén no era solo un jardín.
+Era la frontera entre lo humano… y lo divino.
+Y allí, entre árboles, ríos y frutos, apareció… la voz.
+Génesis capítulo 3 dice:
+“Pero la serpiente era astuta, más que todos los animales del campo que Dios había hecho…”
+Astuta.
+No violenta. No demoníaca.
+Solo… astuta.
+Y capaz de hablar.
+“¿Conque Dios les ha dicho que no coman de ningún árbol?”
+La pregunta no ataca. Insinúa. Siembra duda.
+En menos de cinco frases, la serpiente logra lo impensable:
+Que Eva cuestione a Dios.
+Que Adán coma.
+Que la inocencia se desvanezca.
+Pero… ¿quién era esta criatura realmente?
+Durante siglos, la interpretación más común ha sido clara:
+La serpiente era Satanás disfrazado.
+¿La prueba?
+Apocalipsis 12:9, donde se menciona:
+“La serpiente antigua, que se llama diablo y Satanás, el engañador del mundo entero.”
+Pero hay un detalle crucial:
+Génesis nunca menciona a Satanás.
+Ni una sola vez.
+¿Entonces… de dónde viene esta conexión?
+En el judaísmo temprano, el "Satán" no era un enemigo de Dios.
+Era un fiscal celestial. Un adversario, sí, pero que actuaba bajo orden divina.
+En el libro de Job, por ejemplo, el Satán no actúa por rebeldía, sino con permiso de Dios.
+La imagen de Satanás como ángel caído aparece mucho después, influenciada por textos como 1 Enoc, la literatura apocalíptica y el cristianismo primitivo.
+En otras palabras: la idea de que Satanás es la serpiente del Edén no está en el texto original, sino en su interpretación siglos más tarde.
+Pero entonces… ¿qué era la serpiente?
+Algunos estudiosos creen que fue un animal real, dotado de habla solo para ese momento, como ocurrió con la burra de Balaam en Números 22.
+Otros afirman que fue una criatura mitológica, un ser intermedio, como los antiguos dioses serpiente de culturas vecinas.
+En la antigüedad, la serpiente no era simplemente maldad.
+Era sabiduría. Poder. Transformación.
+Incluso en la Biblia, aparece en otros contextos:
+Moisés levanta una serpiente de bronce en el desierto… y quien la mira, sana.
+Jesús, siglos después, se compara con ella.
+¿Curioso, no?
+La misma criatura que simboliza la caída… también simboliza la redención.
+Cuando Dios confronta a la serpiente, no la llama "Satanás".
+No le pregunta: “¿por qué hiciste esto?”.
+Solo la maldice… como a un animal.
+“Te arrastrarás sobre tu vientre, y polvo comerás…”
+Esto sugiere que antes no se arrastraba.
+¿Era un ser con patas? ¿Alado? ¿Espiritual? ¿Mutado?
+La maldición implica transformación.
+Como si hubiera sido diseñada para ese momento… y luego degradada.
+Pero hay un momento clave.
+Dios le dice a la serpiente:
+“Pondré enemistad entre ti y la mujer… entre tu simiente y la suya.”
+Este versículo ha sido interpretado como la primera profecía del Mesías:
+El descendiente de Eva aplastará la cabeza de la serpiente.
+Y ella, lo herirá en el talón.
+En esa imagen… la serpiente ya no es solo un animal.
+Es símbolo del mal, del conflicto eterno…
+y del fin prometido.
+Pero si era solo un símbolo…
+¿por qué hablar? ¿Por qué castigarla físicamente?
+Y si era Satanás…
+¿por qué tratarlo como un animal y no como un ser espiritual?
+Hay más preguntas que respuestas.
+Y quizá ese es el punto.
+La historia del Edén no es solo el relato del primer pecado.
+Es el espejo de nuestra condición humana.
+El deseo de más.
+La duda.
+La voz que susurra:
+“Dios no quiere que sepas…”
+Hoy, ya no hay jardín…
+pero la serpiente sigue hablando.
+A veces en forma de ideas.
+O de cultura.
+O de miedo.
+O incluso… en nuestra propia conciencia.
+Quizá no importa tanto si la serpiente era Satanás, un animal, o una figura simbólica.
+Lo verdaderamente inquietante…
+es que seguimos escuchando su voz.
+La pregunta real no es “¿Quién era la serpiente?”
+sino…
+¿Quién sigue hablando hoy con su voz?
+¿La reconoces? ¿La escucharás… o sabrás callarla?
+¿Y tú qué piensas?
+¿Era Satanás disfrazado… o algo más complejo?
+Te leo en los comentarios.</p>
+        </div>
     </div>
+
+    <div class="success-message" id="successMessage">
+        ¡Texto copiado al portapapeles!
+    </div>
+
+    <script>
+        async function copyToClipboard() {
+            const textElement = document.querySelector('.guion');
+            const button = document.querySelector('.copy-button');
+            const buttonText = document.getElementById('buttonText');
+            const successMessage = document.getElementById('successMessage');
+            
+            try {
+                await navigator.clipboard.writeText(textElement.textContent);
+                
+                // Cambiar apariencia del botón
+                button.classList.add('copied');
+                buttonText.textContent = '¡Copiado!';
+                
+                // Mostrar mensaje de éxito
+                successMessage.classList.add('show');
+                
+                // Restaurar estado del botón después de 2 segundos
+                setTimeout(() => {
+                    button.classList.remove('copied');
+                    buttonText.textContent = 'Copiar Texto';
+                }, 2000);
+                
+                // Ocultar mensaje de éxito después de 3 segundos
+                setTimeout(() => {
+                    successMessage.classList.remove('show');
+                }, 3000);
+                
+            } catch (err) {
+                console.error('Error al copiar texto: ', err);
+                
+                // Fallback para navegadores que no soportan clipboard API
+                const textArea = document.createElement('textarea');
+                textArea.value = textElement.textContent;
+                document.body.appendChild(textArea);
+                textArea.select();
+                document.execCommand('copy');
+                document.body.removeChild(textArea);
+                
+                // Mostrar mensaje de éxito
+                successMessage.classList.add('show');
+                setTimeout(() => {
+                    successMessage.classList.remove('show');
+                }, 3000);
+            }
+        }
+    </script>
 </body>
 </html>
